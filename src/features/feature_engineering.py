@@ -75,7 +75,8 @@ def apply_bow(train_data: pd.DataFrame, test_data: pd.DataFrame, max_features: i
         test_df['label'] = y_test
 
         
-
+        # FIX: create models directory before saving
+        os.makedirs("models", exist_ok=True)
         pickle.dump(vectorizer, open('models/vectorizer.pkl', 'wb'))
 
 
