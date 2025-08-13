@@ -11,17 +11,36 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+
+      # Cache pip dependencies
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      
+
+      # Cache DVC cache folder
+      - name: Cache DVC data
+        uses: actions/cache@v3
+        with:
+          path: .dvc/cache
+          key: dvc-cache-${{ hashFiles('**/dvc.lock') }}
+          restore-keys: |
+            dvc-cache-
+
       - name: Run DVC pipeline
         env: 
           DAGSHUB_PAT: ${{ secrets.DAGSHUB_PAT }}
         run: |
+          dvc pull
           dvc repro
