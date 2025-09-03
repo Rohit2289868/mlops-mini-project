@@ -14,6 +14,9 @@ import nltk
 import string
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def lemmatization(text):
     """Lemmatize the text."""
